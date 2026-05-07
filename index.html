@@ -3,205 +3,364 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Sistema de Citas ❤️</title>
-
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
 
-body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:#050505;
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  body{
+    font-family:'Poppins',sans-serif;
+    background:#0a0a0f;
     color:white;
+    min-height:100vh;
     overflow-x:hidden;
-}
+  }
 
-.container{
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(255,45,117,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(155,0,255,0.12) 0%, transparent 50%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .container{
+    position:relative;
+    z-index:1;
+    max-width:900px;
+    margin:0 auto;
+    padding:30px 16px 50px;
     text-align:center;
-    padding:30px 15px;
-}
+  }
 
-h1{
-    font-size:2.2rem;
-    color:#ff0066;
-    text-shadow:0 0 20px #ff0066;
-}
+  .badge{
+    display:inline-block;
+    background:rgba(255,45,117,0.15);
+    border:1px solid rgba(255,45,117,0.4);
+    border-radius:30px;
+    padding:6px 18px;
+    font-size:0.75rem;
+    letter-spacing:0.1em;
+    color:#ff7aaa;
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
 
-.subtitle{
-    color:#aaa;
+  h1{
+    font-size:2.6rem;
+    font-weight:800;
+    background:linear-gradient(135deg,#ff2d75,#ff8fab,#c56bff);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    line-height:1.1;
+    margin-bottom:8px;
+  }
+
+  .subtitle{color:#888;font-size:0.95rem;margin-bottom:10px;}
+
+  .countdown{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:rgba(255,45,117,0.1);
+    border:1px solid rgba(255,45,117,0.3);
+    border-radius:12px;
+    padding:8px 18px;
+    font-size:0.85rem;
+    color:#ff7aaa;
     margin-bottom:30px;
-}
+  }
 
-.cards{
+  .dot{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:#ff2d75;
+    animation:pulse 1.2s infinite;
+  }
+
+  @keyframes pulse{
+    0%,100%{opacity:1;transform:scale(1);}
+    50%{opacity:0.4;transform:scale(0.7);}
+  }
+
+  .cards{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-}
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:16px;
+    margin-bottom:30px;
+  }
 
-.card{
-    background:#111;
-    border:1px solid #ff0066;
+  .card{
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,45,117,0.25);
     border-radius:20px;
-    padding:20px;
-    transition:0.3s;
-    box-shadow:0 0 15px rgba(255,0,102,0.3);
-}
-
-.card:hover{
-    transform:scale(1.03);
-    box-shadow:0 0 25px rgba(255,0,102,0.7);
-}
-
-.card h2{
-    color:#ff4d88;
-}
-
-button{
-    margin-top:12px;
-    padding:12px 18px;
-    border:none;
-    border-radius:10px;
-    background:#ff0066;
-    color:white;
-    font-size:1rem;
+    padding:22px 16px;
     cursor:pointer;
-}
+    transition:all 0.25s ease;
+    position:relative;
+    overflow:hidden;
+  }
 
-button:hover{
-    background:#ff4d88;
-}
+  .card::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg,rgba(255,45,117,0.08),transparent);
+    opacity:0;
+    transition:opacity 0.25s;
+  }
 
-.resultado{
-    margin-top:25px;
-    background:#111;
-    border:1px solid #ff0066;
+  .card:hover{
+    transform:translateY(-5px);
+    border-color:rgba(255,45,117,0.6);
+    box-shadow:0 10px 30px rgba(255,45,117,0.25);
+  }
+
+  .card:hover::before{opacity:1;}
+  .card .emoji{font-size:2.5rem;margin-bottom:10px;display:block;}
+  .card h2{font-size:1.05rem;font-weight:700;color:#ff4d88;margin-bottom:6px;}
+  .card p{font-size:0.82rem;color:#999;line-height:1.5;margin-bottom:14px;}
+
+  .card .tag{
+    display:inline-block;
+    background:rgba(255,45,117,0.15);
+    border:1px solid rgba(255,45,117,0.3);
     border-radius:20px;
-    padding:18px;
-    box-shadow:0 0 20px rgba(255,0,102,0.4);
-    animation:fadeIn 0.4s ease;
-}
+    padding:3px 10px;
+    font-size:0.72rem;
+    color:#ff7aaa;
+    margin-bottom:12px;
+  }
 
-.oculto{
-    display:none;
-}
-
-@keyframes fadeIn{
-    from{opacity:0; transform:translateY(10px);}
-    to{opacity:1; transform:translateY(0);}
-}
-
-.footer{
-    margin-top:40px;
-    color:#777;
+  .btn{
+    width:100%;
+    padding:11px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#ff2d75,#c56bff);
+    color:white;
     font-size:0.9rem;
-}
+    font-weight:600;
+    cursor:pointer;
+    transition:all 0.2s;
+    font-family:'Poppins',sans-serif;
+  }
 
+  .btn:hover{opacity:0.9;transform:scale(1.02);}
+  .btn:active{transform:scale(0.97);}
+
+  .overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.7);
+    z-index:100;
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    backdrop-filter:blur(4px);
+  }
+
+  .overlay.open{display:flex;}
+
+  .modal{
+    background:#13131a;
+    border:1px solid rgba(255,45,117,0.3);
+    border-top-left-radius:24px;
+    border-top-right-radius:24px;
+    padding:28px 24px 36px;
+    width:100%;
+    max-width:540px;
+    box-shadow:0 -10px 40px rgba(255,45,117,0.25);
+    animation:slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp{
+    from{transform:translateY(100%);}
+    to{transform:translateY(0);}
+  }
+
+  .modal-handle{width:40px;height:4px;background:#333;border-radius:4px;margin:0 auto 20px;}
+  .modal-emoji{font-size:3rem;margin-bottom:10px;}
+  .modal h2{font-size:1.4rem;font-weight:700;color:#ff4d88;margin-bottom:6px;}
+
+  .modal .hora{
+    font-size:0.85rem;
+    color:#ff7aaa;
+    background:rgba(255,45,117,0.1);
+    border-radius:8px;
+    padding:4px 12px;
+    display:inline-block;
+    margin-bottom:14px;
+  }
+
+  .modal p{
+    color:#bbb;
+    font-size:0.9rem;
+    line-height:1.7;
+    text-align:left;
+    background:rgba(255,255,255,0.03);
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:16px;
+    border:1px solid rgba(255,255,255,0.07);
+    white-space:pre-line;
+  }
+
+  .modal-btns{display:flex;gap:10px;}
+
+  .btn-confirm{
+    flex:1;padding:12px;border:none;border-radius:12px;
+    background:linear-gradient(135deg,#ff2d75,#c56bff);
+    color:white;font-size:0.95rem;font-weight:600;
+    cursor:pointer;font-family:'Poppins',sans-serif;
+  }
+
+  .btn-close{
+    flex:1;padding:12px;border:1px solid #333;border-radius:12px;
+    background:transparent;color:#888;font-size:0.95rem;
+    cursor:pointer;font-family:'Poppins',sans-serif;
+  }
+
+  .sent-msg{
+    display:none;
+    background:rgba(0,200,100,0.1);
+    border:1px solid rgba(0,200,100,0.3);
+    border-radius:12px;
+    padding:10px;color:#4caf50;
+    font-size:0.85rem;margin-top:10px;text-align:center;
+  }
+
+  .footer{margin-top:20px;font-size:0.75rem;color:#444;}
 </style>
 </head>
-
 <body>
 
 <div class="container">
+  <div class="badge">📅 Lunes — Plan del día</div>
+  <h1>¿Qué hacemos<br>hoy mi amor? 💕</h1>
+  <p class="subtitle">Elige el plan que más te llame la atención</p>
+  <div class="countdown">
+    <span class="dot"></span>
+    Esperando tu respuesta...
+  </div>
 
-<h1>SISTEMA DE CITAS ❤️</h1>
+  <div class="cards">
+    <div class="card" onclick="abrir('cine')">
+      <span class="emoji">🎬</span>
+      <span class="tag">5:00 PM</span>
+      <h2>Cine Hokum</h2>
+      <p>La Maldición de la Bruja 🍿<br>Palomitas, refresco y tú a mi lado en la oscuridad.</p>
+      <button class="btn">Ver detalles</button>
+    </div>
+    <div class="card" onclick="abrir('privado')">
+      <span class="emoji">🔥</span>
+      <span class="tag">Solo nosotros</span>
+      <h2>Plan Privado</h2>
+      <p>Tarde especial en pareja 💕<br>Sin distracciones, solo tú y yo.</p>
+      <button class="btn">Ver detalles</button>
+    </div>
+    <div class="card" onclick="abrir('parque')">
+      <span class="emoji">🌳</span>
+      <span class="tag">Aire libre</span>
+      <h2>Parque Metro</h2>
+      <p>Pizza 🍕 + caminata + risas<br>Un rato tranquilo pero divertido.</p>
+      <button class="btn">Ver detalles</button>
+    </div>
+    <div class="card" onclick="abrir('zoo')">
+      <span class="emoji">🦁</span>
+      <span class="tag">Día completo</span>
+      <h2>Zoológico</h2>
+      <p>Comida casera 🥡 + fotos 📸<br>Un paseo diferente para recordar.</p>
+      <button class="btn">Ver detalles</button>
+    </div>
+  </div>
 
-<p class="subtitle">Selecciona el plan que más se te antoje 😏</p>
-
-<div class="cards">
-
-<div class="card">
-<h2>🎬 Hokum</h2>
-<p>Cine en Galerías + sustos + abrazos 🍿👻</p>
-<button onclick="enviar('Hokum en Galerías')">Elegir ❤️</button>
+  <div class="footer">❤️ Sistema de Citas v2.0 — Hecho con amor</div>
 </div>
 
-<div class="card">
-<h2>🔥 PIRAMID MOTEL</h2>
-<p>Tarde traviesa activada 😏</p>
-<button onclick="enviar('PIRAMID MOTEL')">Elegir ❤️</button>
-</div>
-
-<div class="card">
-<h2>🌳 Parque Metropolitano</h2>
-<p>Comer, caminar y pasar tiempo juntos ❤️</p>
-<button onclick="enviar('Parque Metropolitano')">Elegir ❤️</button>
-</div>
-
-<div class="card">
-<h2>🍽️ Ir por ti a la uni</h2>
-<p>Comida rica + tarde juntos 🫶</p>
-<button onclick="enviar('Ir por ella a la uni')">Elegir ❤️</button>
-</div>
-
-<div class="card">
-<h2>🦁 Zoológico</h2>
-<p>Fotos, comida y paseo 📸❤️</p>
-<button onclick="enviar('Zoológico Guadalajara')">Elegir ❤️</button>
-</div>
-
-</div>
-
-<!-- RESULTADO -->
-<div id="resultado" class="resultado oculto"></div>
-
-<div class="footer">
-❤️ Desarrollado con amor en sistemas 😏
-</div>
-
+<div class="overlay" id="overlay" onclick="cerrarOverlay(event)">
+  <div class="modal" id="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-emoji" id="m-emoji"></div>
+    <h2 id="m-titulo"></h2>
+    <div class="hora" id="m-hora"></div>
+    <p id="m-texto"></p>
+    <div class="modal-btns">
+      <button class="btn-confirm" onclick="confirmar()">¡Me apunto! 🎉</button>
+      <button class="btn-close" onclick="cerrar()">Cerrar</button>
+    </div>
+    <div class="sent-msg" id="sent-msg">✅ ¡Confirmado! Ya sé que vas 😍</div>
+  </div>
 </div>
 
 <script>
+const planes = {
+  cine: {
+    emoji:"🎬",
+    titulo:"Cine Hokum — Lunes 5:00 PM",
+    hora:"📍 Cine Hokum · 5:00 PM",
+    texto:"Vemos La Maldición de la Bruja 🍿\n\nPlan: llegamos 20 min antes, compramos palomitas grandes y refresco compartido. Te busco a las 4:30 PM. Outfit cómodo, hace frío en la sala. Después del cine vemos qué se nos antoja cenar 🍔",
+    correo:"Plan CINE — Cine Hokum 5pm"
+  },
+  privado: {
+    emoji:"🔥",
+    titulo:"Plan Privado — Solo nosotros",
+    hora:"📍 Sin salir · Tarde entera",
+    texto:"Tarde especial en pareja 💕\n\nNada de teléfonos, nada de distracciones. Música, calma y buena compañía. Trae ropa cómoda o lo que gustes 😏. Es un momento para desconectarse del mundo y conectar entre nosotros.",
+    correo:"Plan PRIVADO — tarde especial"
+  },
+  parque: {
+    emoji:"🌳",
+    titulo:"Parque Metropolitano",
+    hora:"📍 Parque Metro · Tarde",
+    texto:"Pizza 🍕 + caminata + convivencia al aire libre\n\nPedimos pizza antes de ir, llegamos al parque, buscamos un lugar con sombra y pasamos una tarde tranquila. Podemos llevar una cobija para sentarnos. Ambiente relajado, buena plática y mucho aire fresco 🌤️",
+    correo:"Plan PARQUE — Parque Metro con pizza"
+  },
+  zoo: {
+    emoji:"🦁",
+    titulo:"Zoológico — Día de paseo",
+    hora:"📍 Zoológico · Mañana / Tarde",
+    texto:"Comida preparada 🥡 + fotos 📸 + recorrido completo\n\nPreparamos comida en casa, la llevamos en bolsa y pasamos el día recorriendo el zoológico. Muchas fotos, risas y momentos para guardar. Lleva zapatos cómodos porque caminamos bastante 👟",
+    correo:"Plan ZOO — Zoológico día completo"
+  }
+};
 
-function enviar(plan){
+let planActual = null;
 
-    // Envío de correo
-    fetch("https://formsubmit.co/ajax/pvillaibarra@icloud.com", {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            mensaje: "Tu novia eligió: " + plan + " ❤️"
-        })
-    });
-
-    mostrarInstrucciones(plan);
+function abrir(plan){
+  planActual = plan;
+  const d = planes[plan];
+  document.getElementById('m-emoji').innerText = d.emoji;
+  document.getElementById('m-titulo').innerText = d.titulo;
+  document.getElementById('m-hora').innerText = d.hora;
+  document.getElementById('m-texto').innerText = d.texto;
+  document.getElementById('sent-msg').style.display = 'none';
+  document.getElementById('overlay').classList.add('open');
 }
 
-function mostrarInstrucciones(plan){
-
-    let texto = "";
-
-    if(plan === "Hokum en Galerías"){
-        texto = "🎬 Prepárate: ropa cómoda, lleguen puntuales, cine + abrazos + algo de cenar 🍿❤️";
-    }
-
-    if(plan === "PIRAMID MOTEL"){
-        texto = "🔥 Prepárate: ropa cómoda, actitud relajada 😏 y sin prisas… hoy es especial.";
-    }
-
-    if(plan === "Parque Metropolitano"){
-        texto = "🌳 Prepárate: tenis cómodos, agua y ganas de caminar, comer y reír ❤️";
-    }
-
-    if(plan === "Ir por ella a la uni"){
-        texto = "🍽️ Prepárate: voy por ti, comida rica y tarde tranquila juntos 🫶";
-    }
-
-    if(plan === "Zoológico Guadalajara"){
-        texto = "🦁 Prepárate: ropa fresca, cámara lista 📸 y energía para todo el día ❤️";
-    }
-
-    const panel = document.getElementById("resultado");
-    panel.classList.remove("oculto");
-    panel.innerHTML = `
-        <h2>❤️ Plan seleccionado</h2>
-        <p><strong>${plan}</strong></p>
-        <p>${texto}</p>
-    `;
+function cerrar(){
+  document.getElementById('overlay').classList.remove('open');
 }
 
+function cerrarOverlay(e){
+  if(e.target === document.getElementById('overlay')) cerrar();
+}
+
+function confirmar(){
+  if(!planActual) return;
+  const d = planes[planActual];
+  fetch("https://formsubmit.co/ajax/pvillaibarra@icloud.com",{
+    method:"POST",
+    headers:{'Accept':'application/json','Content-Type':'application/json'},
+    body:JSON.stringify({plan:d.correo,mensaje:"¡Confirmó el plan! 🎉"})
+  });
+  document.getElementById('sent-msg').style.display='block';
+  setTimeout(cerrar,2500);
+}
 </script>
 
 </body>
