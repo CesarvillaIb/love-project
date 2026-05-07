@@ -151,7 +151,6 @@
   }
 
   .btn:hover{opacity:0.9;transform:scale(1.02);}
-  .btn:active{transform:scale(0.97);}
 
   .overlay{
     position:fixed;
@@ -210,9 +209,35 @@
     white-space:pre-line;
   }
 
+  /* Sección de mensaje oculta inicialmente */
+  #seccion-mensaje {
+    display: none;
+    margin-top: 10px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 45, 117, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    resize: none;
+    outline: none;
+  }
+
   .modal-btns{display:flex;gap:10px;}
 
-  .btn-confirm{
+  .btn-confirm, .btn-final {
     flex:1;padding:12px;border:none;border-radius:12px;
     background:linear-gradient(135deg,#ff2d75,#c56bff);
     color:white;font-size:0.95rem;font-weight:600;
@@ -289,11 +314,21 @@
     <h2 id="m-titulo"></h2>
     <div class="hora" id="m-hora"></div>
     <p id="m-texto"></p>
-    <div class="modal-btns">
-      <button class="btn-confirm" onclick="confirmar()">¡Me apunto! 🎉</button>
+    
+    <!-- Botones iniciales -->
+    <div class="modal-btns" id="botones-iniciales">
+      <button class="btn-confirm" onclick="mostrarMensaje()">¡Me apunto! 🎉</button>
       <button class="btn-close" onclick="cerrar()">Cerrar</button>
     </div>
-    <div class="sent-msg" id="sent-msg">✅ ¡Confirmado! Ya sé que vas 😍</div>
+
+    <!-- Sección de mensaje (Aparece tras dar clic a Me apunto) -->
+    <div id="seccion-mensaje">
+      <p style="background:none; border:none; padding:0; margin-bottom:10px; color:#ff7aaa; font-size:0.8rem;">¡Genial! Déjame un mensaje antes de confirmar:</p>
+      <textarea id="m-respuesta" rows="3" placeholder="Escribe algo aquí..."></textarea>
+      <button class="btn-final" onclick="enviarTodo()">Confirmar y enviar ❤️</button>
+    </div>
+
+    <div class="sent-msg" id="sent-msg">✅ ¡Confirmado! Ya recibí tu mensaje 😍</div>
   </div>
 </div>
 
@@ -303,28 +338,28 @@ const planes = {
     emoji:"🎬",
     titulo:"Cine Hokum — Lunes 5:00 PM",
     hora:"📍 Cine Hokum · 5:00 PM",
-    texto:"Vemos La Maldición de la Bruja 🍿\n\nPlan: llegamos 20 min antes, compramos palomitas grandes y refresco compartido. Te busco a las 4:30 PM. Outfit cómodo, hace frío en la sala. Después del cine vemos qué se nos antoja cenar 🍔",
+    texto:"Vemos La Maldición de la Bruja 🍿\n\nPlan: llegamos 20 min antes, compramos palomitas grandes y refresco compartido. Te busco a las 4:30 PM. Outfit cómodo, hace frío en la sala.",
     correo:"Plan CINE — Cine Hokum 5pm"
   },
- privado: {
+  privado: {
     emoji:"🔥",
     titulo:"Plan Privado — Motel Piramid",
     hora:"📍 Motel Piramid · Tarde entera",
-    texto:"Tarde especial para nosotros dos 🔥\n\nPlan: Nos vamos directo al Motel Piramid a disfrutar sin que nadie nos moleste. Lleva tu Babydoll puesto que vamos a Co**r y disfrutar al máximo. Es un momento para desconectarse del mundo y conectar intensamente entre nosotros. 😏",
+    texto:"Tarde especial para nosotros dos 🔥\n\nPlan: Nos vamos directo al Motel Piramid a disfrutar sin que nadie nos moleste. Lleva tu Babydoll puesto que vamos a Co**r y disfrutar al máximo.",
     correo:"Plan PRIVADO — Motel Piramid / Babydoll"
   },
   parque: {
     emoji:"🌳",
     titulo:"Parque Metropolitano",
     hora:"📍 Parque Metro · Tarde",
-    texto:"Pizza 🍕 + caminata + convivencia al aire libre\n\nPedimos pizza antes de ir, llegamos al parque, buscamos un lugar con sombra y pasamos una tarde tranquila. Podemos llevar una cobija para sentarnos. Ambiente relajado, buena plática y mucho aire fresco 🌤️",
+    texto:"Pizza 🍕 + caminata + convivencia al aire libre\n\nPedimos pizza antes de ir, buscamos un lugar con sombra y pasamos una tarde tranquila.",
     correo:"Plan PARQUE — Parque Metro con pizza"
   },
   zoo: {
     emoji:"🦁",
     titulo:"Zoológico — Día de paseo",
     hora:"📍 Zoológico · Mañana / Tarde",
-    texto:"Comida preparada 🥡 + fotos 📸 + recorrido completo\n\nPreparamos comida en casa, la llevamos en bolsa y pasamos el día recorriendo el zoológico. Muchas fotos, risas y momentos para guardar. Lleva zapatos cómodos porque caminamos bastante 👟",
+    texto:"Comida preparada 🥡 + fotos 📸 + recorrido completo\n\nPreparamos comida en casa y pasamos el día recorriendo el zoológico. Lleva zapatos cómodos.",
     correo:"Plan ZOO — Zoológico día completo"
   }
 };
@@ -338,8 +373,19 @@ function abrir(plan){
   document.getElementById('m-titulo').innerText = d.titulo;
   document.getElementById('m-hora').innerText = d.hora;
   document.getElementById('m-texto').innerText = d.texto;
+  
+  // Resetear estados al abrir
+  document.getElementById('botones-iniciales').style.display = 'flex';
+  document.getElementById('seccion-mensaje').style.display = 'none';
   document.getElementById('sent-msg').style.display = 'none';
+  document.getElementById('m-respuesta').value = "";
+  
   document.getElementById('overlay').classList.add('open');
+}
+
+function mostrarMensaje() {
+  document.getElementById('botones-iniciales').style.display = 'none';
+  document.getElementById('seccion-mensaje').style.display = 'block';
 }
 
 function cerrar(){
@@ -350,16 +396,24 @@ function cerrarOverlay(e){
   if(e.target === document.getElementById('overlay')) cerrar();
 }
 
-function confirmar(){
+function enviarTodo(){
   if(!planActual) return;
   const d = planes[planActual];
+  const mensajeElla = document.getElementById('m-respuesta').value;
+
   fetch("https://formsubmit.co/ajax/pvillaibarra@icloud.com",{
     method:"POST",
     headers:{'Accept':'application/json','Content-Type':'application/json'},
-    body:JSON.stringify({plan:d.correo,mensaje:"¡Confirmó el plan! 🎉"})
+    body:JSON.stringify({
+        plan_elegido: d.correo,
+        mensaje_de_ella: mensajeElla || "No escribió mensaje adicional",
+        estado: "¡Cita Confirmada! 💖"
+    })
   });
-  document.getElementById('sent-msg').style.display='block';
-  setTimeout(cerrar,2500);
+  
+  document.getElementById('seccion-mensaje').style.display = 'none';
+  document.getElementById('sent-msg').style.display = 'block';
+  setTimeout(cerrar, 2500);
 }
 </script>
 
