@@ -155,12 +155,12 @@
   .overlay{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,0.7);
+    background:rgba(0,0,0,0.8);
     z-index:100;
     display:none;
-    align-items:flex-end;
+    align-items:center;
     justify-content:center;
-    backdrop-filter:blur(4px);
+    backdrop-filter:blur(6px);
   }
 
   .overlay.open{display:flex;}
@@ -168,18 +168,12 @@
   .modal{
     background:#13131a;
     border:1px solid rgba(255,45,117,0.3);
-    border-top-left-radius:24px;
-    border-top-right-radius:24px;
+    border-radius:24px;
     padding:28px 24px 36px;
     width:100%;
     max-width:540px;
-    box-shadow:0 -10px 40px rgba(255,45,117,0.25);
-    animation:slideUp 0.3s ease;
-  }
-
-  @keyframes slideUp{
-    from{transform:translateY(100%);}
-    to{transform:translateY(0);}
+    box-shadow:0 10px 40px rgba(255,45,117,0.25);
+    text-align:center;
   }
 
   .modal-handle{width:40px;height:4px;background:#333;border-radius:4px;margin:0 auto 20px;}
@@ -209,7 +203,6 @@
     white-space:pre-line;
   }
 
-  /* Sección de mensaje oculta inicialmente */
   #seccion-mensaje {
     display: none;
     margin-top: 10px;
@@ -259,15 +252,86 @@
     font-size:0.85rem;margin-top:10px;text-align:center;
   }
 
+  /* ESTILOS DEL TICKET VIP */
+  .ticket {
+    display: none;
+    background: #fff;
+    color: #000;
+    border-radius: 15px;
+    overflow: hidden;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: 0 0 50px rgba(255,45,117,0.4);
+    animation: ticketAnim 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  @keyframes ticketAnim {
+    from { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+  }
+
+  .ticket-header {
+    background: linear-gradient(90deg, #ff2d75, #c56bff);
+    padding: 15px;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+
+  .ticket-body {
+    padding: 20px;
+    border-bottom: 2px dashed #ccc;
+    text-align: left;
+    position: relative;
+  }
+
+  .ticket-body::before, .ticket-body::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    width: 24px;
+    height: 24px;
+    background: #13131a; /* Color del fondo del modal */
+    border-radius: 50%;
+  }
+  .ticket-body::before { left: -12px; }
+  .ticket-body::after { right: -12px; }
+
+  .t-label { color: #ff2d75; font-weight: bold; font-size: 0.75rem; margin-top: 10px; display: block; }
+  .t-value { font-size: 0.95rem; font-weight: bold; margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 2px; }
+
+  .qr-mock {
+    width: 80px;
+    height: 80px;
+    background: #000;
+    margin: 15px auto 0;
+    padding: 5px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+  }
+  .qr-dot { background: #fff; width: 6px; height: 6px; }
+
+  .ticket-footer {
+    padding: 15px;
+    background: #f9f9f9;
+    font-size: 0.7rem;
+    color: #666;
+    font-style: italic;
+  }
+
   .footer{margin-top:20px;font-size:0.75rem;color:#444;}
 </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="badge">📅 Lunes — Plan del día</div>
+  <div class="badge">📅 Próximo Lunes — 11 de Mayo</div>
   <h1>¿Qué hacemos<br>hoy mi amor? 💕</h1>
-  <p class="subtitle">Elige el plan que más te llame la atención</p>
+  <p class="subtitle">Fernanda, elige el plan que más te guste</p>
   <div class="countdown">
     <span class="dot"></span>
     Esperando tu respuesta...
@@ -278,7 +342,7 @@
       <span class="emoji">🎬</span>
       <span class="tag">5:00 PM</span>
       <h2>Cine Hokum</h2>
-      <p>La Maldición de la Bruja 🍿<br>Palomitas, refresco y tú a mi lado en la oscuridad.</p>
+      <p>La Maldición de la Bruja 🍿<br>Terror y palomitas juntos.</p>
       <button class="btn">Ver detalles</button>
     </div>
     <div class="card" onclick="abrir('privado')">
@@ -304,28 +368,55 @@
     </div>
   </div>
 
-  <div class="footer">❤️ Sistema de Citas v2.0 — Hecho con amor</div>
+  <div class="footer">❤️ Sistema de Citas v3.0 — Hecho por Paulo para Fernanda</div>
 </div>
 
 <div class="overlay" id="overlay" onclick="cerrarOverlay(event)">
-  <div class="modal" id="modal">
+  <!-- Contenido del Modal (Selección y Mensaje) -->
+  <div class="modal" id="modal-ui">
     <div class="modal-handle"></div>
-    <div class="modal-emoji" id="m-emoji"></div>
-    <h2 id="m-titulo"></h2>
-    <div class="hora" id="m-hora"></div>
-    <p id="m-texto"></p>
-    
-    <!-- Botones iniciales -->
-    <div class="modal-btns" id="botones-iniciales">
-      <button class="btn-confirm" onclick="mostrarMensaje()">¡Me apunto! 🎉</button>
-      <button class="btn-close" onclick="cerrar()">Cerrar</button>
+    <div id="modal-content">
+        <div class="modal-emoji" id="m-emoji"></div>
+        <h2 id="m-titulo"></h2>
+        <div class="hora" id="m-hora"></div>
+        <p id="m-texto"></p>
+        
+        <div class="modal-btns" id="botones-iniciales">
+          <button class="btn-confirm" onclick="mostrarMensaje()">¡Me apunto! 🎉</button>
+          <button class="btn-close" onclick="cerrar()">Cerrar</button>
+        </div>
+
+        <div id="seccion-mensaje">
+          <p style="background:none; border:none; padding:0; margin-bottom:10px; color:#ff7aaa; font-size:0.8rem;">¡Genial! Déjame un mensaje antes de confirmar:</p>
+          <textarea id="m-respuesta" rows="3" placeholder="Escribe algo aquí..."></textarea>
+          <button class="btn-final" onclick="enviarTodo()">Confirmar y enviar ❤️</button>
+        </div>
     </div>
 
-    <!-- Sección de mensaje (Aparece tras dar clic a Me apunto) -->
-    <div id="seccion-mensaje">
-      <p style="background:none; border:none; padding:0; margin-bottom:10px; color:#ff7aaa; font-size:0.8rem;">¡Genial! Déjame un mensaje antes de confirmar:</p>
-      <textarea id="m-respuesta" rows="3" placeholder="Escribe algo aquí..."></textarea>
-      <button class="btn-final" onclick="enviarTodo()">Confirmar y enviar ❤️</button>
+    <!-- Ticket VIP (Oculto hasta enviar) -->
+    <div class="ticket" id="ticket-vip">
+        <div class="ticket-header">V.I.P. ACCESS</div>
+        <div class="ticket-body">
+            <span class="t-label">INVITADA DE HONOR</span>
+            <div class="t-value">Fernanda</div>
+            
+            <span class="t-label">ORGANIZA</span>
+            <div class="t-value">Paulo</div>
+
+            <span class="t-label">FECHA</span>
+            <div class="t-value">Lunes, 11 de Mayo 2026</div>
+
+            <span class="t-label">DESTINO</span>
+            <div class="t-value" id="t-destino">---</div>
+
+            <span class="t-label">PUNTO DE ENCUENTRO</span>
+            <div class="t-value">Te paso a buscar a tu casa 🚗</div>
+
+            <div class="qr-mock" id="qr"></div>
+        </div>
+        <div class="ticket-footer">
+            "Válido para una experiencia inolvidable. No se aceptan cancelaciones (ya te amolaste)."
+        </div>
     </div>
 
     <div class="sent-msg" id="sent-msg">✅ ¡Confirmado! Ya recibí tu mensaje 😍</div>
@@ -345,7 +436,7 @@ const planes = {
     emoji:"🔥",
     titulo:"Plan Privado — Motel Piramid",
     hora:"📍 Motel Piramid · Tarde entera",
-    texto:"Tarde especial para nosotros dos 🔥\n\nPlan: Nos vamos directo al Motel Piramid a disfrutar sin que nadie nos moleste. Lleva tu Babydoll puesto que vamos a Co**r y disfrutar al máximo.",
+    texto:"Tarde especial para nosotros dos 🔥\n\nPlan: Nos vamos directo al Motel Piramid a disfrutar sin que nadie nos moleste. Lleva tu Babydoll puesto que vamos a disfrutar al máximo.",
     correo:"Plan PRIVADO — Motel Piramid / Babydoll"
   },
   parque: {
@@ -375,6 +466,8 @@ function abrir(plan){
   document.getElementById('m-texto').innerText = d.texto;
   
   // Resetear estados al abrir
+  document.getElementById('modal-content').style.display = 'block';
+  document.getElementById('ticket-vip').style.display = 'none';
   document.getElementById('botones-iniciales').style.display = 'flex';
   document.getElementById('seccion-mensaje').style.display = 'none';
   document.getElementById('sent-msg').style.display = 'none';
@@ -401,19 +494,33 @@ function enviarTodo(){
   const d = planes[planActual];
   const mensajeElla = document.getElementById('m-respuesta').value;
 
+  // Enviar datos
   fetch("https://formsubmit.co/ajax/pvillaibarra@icloud.com",{
     method:"POST",
     headers:{'Accept':'application/json','Content-Type':'application/json'},
     body:JSON.stringify({
         plan_elegido: d.correo,
         mensaje_de_ella: mensajeElla || "No escribió mensaje adicional",
+        fecha_cita: "11 de Mayo",
         estado: "¡Cita Confirmada! 💖"
     })
   });
   
-  document.getElementById('seccion-mensaje').style.display = 'none';
+  // CAMBIO VISUAL AL TICKET
+  document.getElementById('modal-content').style.display = 'none';
+  document.getElementById('t-destino').innerText = d.titulo.split('—')[0];
+  document.getElementById('ticket-vip').style.display = 'block';
   document.getElementById('sent-msg').style.display = 'block';
-  setTimeout(cerrar, 2500);
+
+  // Generar QR visual aleatorio
+  const qr = document.getElementById('qr');
+  qr.innerHTML = '';
+  for(let i=0; i<64; i++){
+    const dot = document.createElement('div');
+    dot.className = 'qr-dot';
+    dot.style.opacity = Math.random() > 0.5 ? '1' : '0.2';
+    qr.appendChild(dot);
+  }
 }
 </script>
 
