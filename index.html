@@ -1,3 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sistema de Citas ❤️</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#050505;
+    color:white;
+    overflow-x:hidden;
+}
+
+.container{
+    text-align:center;
+    padding:40px;
+}
+
+h1{
+    font-size:3rem;
+    color:#ff0066;
+    text-shadow:0 0 20px #ff0066;
+}
+
+.subtitle{
+    color:#aaa;
+    margin-bottom:40px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:#111;
+    border:1px solid #ff0066;
+    border-radius:20px;
+    padding:25px;
+    transition:0.3s;
+    box-shadow:0 0 20px rgba(255,0,102,0.3);
+}
+
+.card:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 30px rgba(255,0,102,0.8);
+}
+
+.card h2{
+    color:#ff4d88;
+}
+
+button{
+    margin-top:15px;
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    background:#ff0066;
+    color:white;
+    font-size:1rem;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#ff4d88;
+    transform:scale(1.05);
+}
+
+.footer{
+    margin-top:50px;
+    color:#777;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>SISTEMA DE CITAS ❤️</h1>
+
+<p class="subtitle">
+Selecciona el plan que más se te antoje 😏
+</p>
+
+<div class="cards">
+
+<div class="card">
+<h2>🎬 Hokum</h2>
+<p>Cine en Galerías + sustos + abrazos 🍿👻</p>
+<button onclick="enviar('Hokum en Galerías')">
+Elegir ❤️
+</button>
+</div>
+
+<div class="card">
+<h2>🔥 PIRAMID MOTEL</h2>
+<p>Tarde traviesa activada 😏</p>
+<button onclick="enviar('PIRAMID MOTEL')">
+Elegir ❤️
+</button>
+</div>
+
+<div class="card">
+<h2>🌳 Parque Metropolitano</h2>
+<p>Comer, caminar y pasar tiempo juntos ❤️</p>
+<button onclick="enviar('Parque Metropolitano')">
+Elegir ❤️
+</button>
+</div>
+
+<div class="card">
+<h2>🍽️ Ir por ti a la uni</h2>
+<p>Comida rica + tarde juntos 🫶</p>
+<button onclick="enviar('Ir por ella a la uni')">
+Elegir ❤️
+</button>
+</div>
+
+<div class="card">
+<h2>🦁 Zoológico</h2>
+<p>Comida, bebidas y fotos juntos 📸❤️</p>
+<button onclick="enviar('Zoológico Guadalajara')">
+Elegir ❤️
+</button>
+</div>
+
+</div>
+
+<div class="footer">
+❤️ Desarrollado por tu novio en sistemas 😏
+</div>
+
+</div>
+
 <script>
 
 function enviar(plan){
@@ -23,3 +166,6 @@ function enviar(plan){
 }
 
 </script>
+
+</body>
+</html>
