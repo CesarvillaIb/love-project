@@ -1,0 +1,25 @@
+<script>
+
+function enviar(plan){
+
+    fetch("https://formsubmit.co/ajax/pvillaibarra@icloud.com", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            mensaje: "Tu novia eligió: " + plan + " ❤️"
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Plan enviado ❤️");
+    })
+    .catch(error => {
+        alert("Error al enviar");
+    });
+
+}
+
+</script>
