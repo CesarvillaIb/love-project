@@ -18,38 +18,38 @@ body{
 
 .container{
     text-align:center;
-    padding:40px;
+    padding:30px 15px;
 }
 
 h1{
-    font-size:3rem;
+    font-size:2.2rem;
     color:#ff0066;
     text-shadow:0 0 20px #ff0066;
 }
 
 .subtitle{
     color:#aaa;
-    margin-bottom:40px;
+    margin-bottom:30px;
 }
 
 .cards{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:25px;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
 }
 
 .card{
     background:#111;
     border:1px solid #ff0066;
     border-radius:20px;
-    padding:25px;
+    padding:20px;
     transition:0.3s;
-    box-shadow:0 0 20px rgba(255,0,102,0.3);
+    box-shadow:0 0 15px rgba(255,0,102,0.3);
 }
 
 .card:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 30px rgba(255,0,102,0.8);
+    transform:scale(1.03);
+    box-shadow:0 0 25px rgba(255,0,102,0.7);
 }
 
 .card h2{
@@ -57,25 +57,43 @@ h1{
 }
 
 button{
-    margin-top:15px;
-    padding:12px 20px;
+    margin-top:12px;
+    padding:12px 18px;
     border:none;
     border-radius:10px;
     background:#ff0066;
     color:white;
     font-size:1rem;
     cursor:pointer;
-    transition:0.3s;
 }
 
 button:hover{
     background:#ff4d88;
-    transform:scale(1.05);
+}
+
+.resultado{
+    margin-top:25px;
+    background:#111;
+    border:1px solid #ff0066;
+    border-radius:20px;
+    padding:18px;
+    box-shadow:0 0 20px rgba(255,0,102,0.4);
+    animation:fadeIn 0.4s ease;
+}
+
+.oculto{
+    display:none;
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(10px);}
+    to{opacity:1; transform:translateY(0);}
 }
 
 .footer{
-    margin-top:50px;
+    margin-top:40px;
     color:#777;
+    font-size:0.9rem;
 }
 
 </style>
@@ -87,56 +105,47 @@ button:hover{
 
 <h1>SISTEMA DE CITAS ❤️</h1>
 
-<p class="subtitle">
-Selecciona el plan que más se te antoje 😏
-</p>
+<p class="subtitle">Selecciona el plan que más se te antoje 😏</p>
 
 <div class="cards">
 
 <div class="card">
 <h2>🎬 Hokum</h2>
 <p>Cine en Galerías + sustos + abrazos 🍿👻</p>
-<button onclick="enviar('Hokum en Galerías')">
-Elegir ❤️
-</button>
+<button onclick="enviar('Hokum en Galerías')">Elegir ❤️</button>
 </div>
 
 <div class="card">
 <h2>🔥 PIRAMID MOTEL</h2>
 <p>Tarde traviesa activada 😏</p>
-<button onclick="enviar('PIRAMID MOTEL')">
-Elegir ❤️
-</button>
+<button onclick="enviar('PIRAMID MOTEL')">Elegir ❤️</button>
 </div>
 
 <div class="card">
 <h2>🌳 Parque Metropolitano</h2>
 <p>Comer, caminar y pasar tiempo juntos ❤️</p>
-<button onclick="enviar('Parque Metropolitano')">
-Elegir ❤️
-</button>
+<button onclick="enviar('Parque Metropolitano')">Elegir ❤️</button>
 </div>
 
 <div class="card">
 <h2>🍽️ Ir por ti a la uni</h2>
 <p>Comida rica + tarde juntos 🫶</p>
-<button onclick="enviar('Ir por ella a la uni')">
-Elegir ❤️
-</button>
+<button onclick="enviar('Ir por ella a la uni')">Elegir ❤️</button>
 </div>
 
 <div class="card">
 <h2>🦁 Zoológico</h2>
-<p>Comida, bebidas y fotos juntos 📸❤️</p>
-<button onclick="enviar('Zoológico Guadalajara')">
-Elegir ❤️
-</button>
+<p>Fotos, comida y paseo 📸❤️</p>
+<button onclick="enviar('Zoológico Guadalajara')">Elegir ❤️</button>
 </div>
 
 </div>
+
+<!-- RESULTADO -->
+<div id="resultado" class="resultado oculto"></div>
 
 <div class="footer">
-❤️ Desarrollado por tu novio en sistemas 😏
+❤️ Desarrollado con amor en sistemas 😏
 </div>
 
 </div>
@@ -145,24 +154,52 @@ Elegir ❤️
 
 function enviar(plan){
 
+    // Envío de correo
     fetch("https://formsubmit.co/ajax/pvillaibarra@icloud.com", {
         method: "POST",
         headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             mensaje: "Tu novia eligió: " + plan + " ❤️"
         })
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert("Plan enviado ❤️");
-    })
-    .catch(error => {
-        alert("Error al enviar");
     });
 
+    mostrarInstrucciones(plan);
+}
+
+function mostrarInstrucciones(plan){
+
+    let texto = "";
+
+    if(plan === "Hokum en Galerías"){
+        texto = "🎬 Prepárate: ropa cómoda, lleguen puntuales, cine + abrazos + algo de cenar 🍿❤️";
+    }
+
+    if(plan === "PIRAMID MOTEL"){
+        texto = "🔥 Prepárate: ropa cómoda, actitud relajada 😏 y sin prisas… hoy es especial.";
+    }
+
+    if(plan === "Parque Metropolitano"){
+        texto = "🌳 Prepárate: tenis cómodos, agua y ganas de caminar, comer y reír ❤️";
+    }
+
+    if(plan === "Ir por ella a la uni"){
+        texto = "🍽️ Prepárate: voy por ti, comida rica y tarde tranquila juntos 🫶";
+    }
+
+    if(plan === "Zoológico Guadalajara"){
+        texto = "🦁 Prepárate: ropa fresca, cámara lista 📸 y energía para todo el día ❤️";
+    }
+
+    const panel = document.getElementById("resultado");
+    panel.classList.remove("oculto");
+    panel.innerHTML = `
+        <h2>❤️ Plan seleccionado</h2>
+        <p><strong>${plan}</strong></p>
+        <p>${texto}</p>
+    `;
 }
 
 </script>
